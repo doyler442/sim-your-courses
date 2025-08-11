@@ -31,7 +31,8 @@
             padding: 3rem;
             text-align: center;
             position: relative;
-            min-height: 800px;
+            min-height: 800px; /* Ensures a minimum height */
+            height: 90vh; /* Sets a consistent viewport-based height */
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -52,6 +53,7 @@
             text-shadow: 0 0 10px rgba(100, 255, 218, 0.8);
             animation: neon-flicker 1.5s infinite alternate;
             margin-bottom: 2rem; /* Add margin to separate from scene content */
+            flex-shrink: 0; /* Prevent title from shrinking */
         }
         @keyframes neon-flicker {
             0% { opacity: 1; text-shadow: 0 0 5px #64ffda; }
@@ -59,25 +61,40 @@
             100% { opacity: 1; text-shadow: 0 0 5px #64ffda; }
         }
 
-        /* Scene transition styles */
+        /* ----- FIX: Scene Layout Changes ----- */
+
+        /* New container for scenes to manage layout and provide a stable height */
+        #scenes-container {
+            position: relative;
+            flex-grow: 1; /* Allows this container to fill the available vertical space */
+            min-height: 0; /* A flexbox trick to prevent overflow issues in some browsers */
+        }
+        
+        /* Scenes are now positioned absolutely within the scenes-container */
         .scene {
-            /* Removed absolute positioning to allow natural flow */
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            display: none; /* Hide scenes by default */
+            height: 100%;
+            display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Align content to the top */
+            justify-content: flex-start;
             align-items: center;
             opacity: 0;
             transform: scale(0.95);
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            pointer-events: none; /* Block interaction on hidden scenes */
+            overflow-y: auto; /* Add vertical scroll if content is too tall for the container */
+            padding: 0 1rem 1rem 1rem; /* Add padding for content spacing */
         }
         .scene.active {
-            display: flex; /* Show the active scene */
             opacity: 1;
             transform: scale(1);
+            pointer-events: auto; /* Allow interaction on the active scene */
         }
 
-        /* ----- Game-specific styles below ----- */
+        /* ----- Game-specific styles below (unchanged) ----- */
         
         /* Card container for the flipping effect */
         .poster-card {
@@ -259,7 +276,7 @@
         @media (max-width: 768px) {
             .poster-container {
                 min-height: auto;
-                height: auto;
+                height: auto; /* Allow height to be determined by content on mobile */
                 padding: 1.5rem;
             }
             .main-title {
@@ -285,85 +302,262 @@
             The Digital Architect's<br>Journey
         </h1>
 
-        <!-- Scene 1: Year One Section -->
-        <div id="scene-1" class="scene active">
-            <h2 class="scene-title text-3xl sm:text-4xl font-bold text-gray-200 mb-8 glow-amber">Year One: The Digital Awakening</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 w-full">
-                <!-- Me and My Digital Life Section -->
-                <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-amber-400 mb-4 section-heading">Me and My Digital Life</h3>
-                    <div class="space-y-4 flex-grow">
-                        <div class="poster-card border-amber-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">What are the building blocks of my Digital Life?</h4>
+        <!-- FIX: New container for all scenes to stabilize the layout -->
+        <div id="scenes-container">
+            <!-- Scene 1: Year One Section -->
+            <div id="scene-1" class="scene active">
+                <h2 class="scene-title text-3xl sm:text-4xl font-bold text-gray-200 mb-8 glow-amber">Year One: The Digital Awakening</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                    <!-- Me and My Digital Life Section -->
+                    <div class="flex flex-col">
+                        <h3 class="text-2xl font-bold text-amber-400 mb-4 section-heading">Me and My Digital Life</h3>
+                        <div class="space-y-4 flex-grow">
+                            <div class="poster-card border-amber-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">What are the building blocks of my Digital Life?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Foundations of Information Systems</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Foundations of Information Systems</p>
+                            <div class="poster-card border-amber-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">What is the technology that underpins my Digital Life?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">IT Infrastructure</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="poster-card border-amber-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">What is the technology that underpins my Digital Life?</h4>
+                    </div>
+
+                    <!-- Programming with AI Section -->
+                    <div class="flex flex-col">
+                        <h3 class="text-2xl font-bold text-glow-purple mb-4 section-heading">Programming with AI</h3>
+                        <div class="space-y-4 flex-grow">
+                            <div class="poster-card border-purple-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How do I build and use AI tools? (Dummy)</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Dummy: Applied AI Development</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">IT Infrastructure</p>
+                            <div class="poster-card border-purple-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">What are the consequences of my Digital Behaviour?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Ethics, Use and Implications for Society</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Organising my Digital Life Section -->
+                    <div class="flex flex-col">
+                        <h3 class="text-2xl font-bold text-glow-green mb-4 section-heading">Organising My Digital Life</h3>
+                        <div class="space-y-4 flex-grow">
+                            <div class="poster-card border-green-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How do I organise my Digital Life?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Data/Information Management</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="poster-card border-green-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">Do my Digital Habits matter?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Data / Business Analytics and Data / Information Visualisation</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Programming with AI Section -->
-                <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-glow-purple mb-4 section-heading">Programming with AI</h3>
-                    <div class="space-y-4 flex-grow">
-                        <div class="poster-card border-purple-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How do I build and use AI tools? (Dummy)</h4>
+            <!-- Scene 2: Year Two Section -->
+            <div id="scene-2" class="scene">
+                <h2 class="scene-title text-3xl sm:text-4xl font-bold text-gray-200 mb-8 glow-purple">Year Two: The Digital Business Frontier</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                    <!-- Me and My Digital Work Life Section -->
+                    <div class="flex flex-col">
+                        <h3 class="text-2xl font-bold text-amber-400 mb-4 section-heading">Me and My Digital Work Life</h3>
+                        <div class="space-y-4 flex-grow">
+                            <div class="poster-card border-amber-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How do I build the digital foundations of a business?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Enterprise Systems Architecture</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Dummy: Applied AI Development</p>
+                            <div class="poster-card border-amber-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How does the technology I use at work underpin business success?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">IT Infrastructure Management</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="poster-card border-purple-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">What are the consequences of my Digital Behaviour?</h4>
+                    </div>
+
+                    <!-- Building Solutions with AI Section -->
+                    <div class="flex flex-col">
+                        <h3 class="text-2xl font-bold text-glow-purple mb-4 section-heading">Building Solutions with AI</h3>
+                        <div class="space-y-4 flex-grow">
+                            <div class="poster-card border-purple-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How can I use AI to build solutions for business?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Applied AI Development</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Ethics, Use and Implications for Society</p>
+                            <div class="poster-card border-purple-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">What are the business consequences of digital behaviour?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Ethical AI and Business Impact</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Organising Business Information Section -->
+                    <div class="flex flex-col">
+                        <h3 class="text-2xl font-bold text-glow-green mb-4 section-heading">Shaping Business Information</h3>
+                        <div class="space-y-4 flex-grow">
+                            <div class="poster-card border-green-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How do I manage, secure, and analyze business data?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Business Data Management & Analytics</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="poster-card border-green-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How do a business's digital habits impact its success?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Data-Driven Business Decisions</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Organising my Digital Life Section -->
-                <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-glow-green mb-4 section-heading">Organising My Digital Life</h3>
-                    <div class="space-y-4 flex-grow">
-                        <div class="poster-card border-green-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How do I organise my Digital Life?</h4>
+            <!-- Scene 3: Year Three Section -->
+            <div id="scene-3" class="scene">
+                <h2 class="scene-title text-3xl sm:text-4xl font-bold text-gray-200 mb-8 glow-green">Year Three: The Public's Digital Architect</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                    <!-- Me in the Community Section -->
+                    <div class="flex flex-col">
+                        <h3 class="text-2xl font-bold text-amber-400 mb-4 section-heading">Me and My Digital Community</h3>
+                        <div class="space-y-4 flex-grow">
+                            <div class="poster-card border-amber-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How can my digital actions create positive social change?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Digital Citizenship and Social Impact</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Data/Information Management</p>
+                            <div class="poster-card border-amber-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How do I collaborate in a digital world? (Dummy)</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Dummy: Online Communities and Collaboration</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="poster-card border-green-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">Do my Digital Habits matter?</h4>
+                    </div>
+
+                    <!-- Building Solutions with AI Section -->
+                    <div class="flex flex-col">
+                        <h3 class="text-2xl font-bold text-glow-purple mb-4 section-heading">Building Solutions for Society</h3>
+                        <div class="space-y-4 flex-grow">
+                            <div class="poster-card border-purple-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How do I use technology to solve global and societal challenges?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Digital Transformation for Social Impact</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Data / Business Analytics and Data / Information Visualisation</p>
+                            <div class="poster-card border-purple-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How does technology affect public policy? (Dummy)</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Dummy: Technology and Governance</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Organising Information for the Public Good Section -->
+                    <div class="flex flex-col">
+                        <h3 class="text-2xl font-bold text-glow-green mb-4 section-heading">Organising Information for the Public Good</h3>
+                        <div class="space-y-4 flex-grow">
+                            <div class="poster-card border-green-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How do I use data to inform public policy and support communities?</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Data Ethics and Governance</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="poster-card border-green-400">
+                                <div class="card-face card-front">
+                                    <h4 class="card-title">How do I ensure data is used ethically? (Dummy)</h4>
+                                </div>
+                                <div class="card-face card-back">
+                                    <div class="back-text-container">
+                                        <p class="back-text">Dummy: Data Privacy and Security</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -372,188 +566,14 @@
             </div>
         </div>
 
-        <!-- Scene 2: Year Two Section -->
-        <div id="scene-2" class="scene">
-            <h2 class="scene-title text-3xl sm:text-4xl font-bold text-gray-200 mb-8 glow-purple">Year Two: The Digital Business Frontier</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                <!-- Me and My Digital Work Life Section -->
-                <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-amber-400 mb-4 section-heading">Me and My Digital Work Life</h3>
-                    <div class="space-y-4 flex-grow">
-                        <div class="poster-card border-amber-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How do I build the digital foundations of a business?</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Enterprise Systems Architecture</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="poster-card border-amber-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How does the technology I use at work underpin business success?</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">IT Infrastructure Management</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Building Solutions with AI Section -->
-                <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-glow-purple mb-4 section-heading">Building Solutions with AI</h3>
-                    <div class="space-y-4 flex-grow">
-                        <div class="poster-card border-purple-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How can I use AI to build solutions for business?</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Applied AI Development</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="poster-card border-purple-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">What are the business consequences of digital behaviour?</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Ethical AI and Business Impact</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Organising Business Information Section -->
-                <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-glow-green mb-4 section-heading">Shaping Business Information</h3>
-                    <div class="space-y-4 flex-grow">
-                        <div class="poster-card border-green-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How do I manage, secure, and analyze business data?</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Business Data Management & Analytics</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="poster-card border-green-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How do a business's digital habits impact its success?</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Data-Driven Business Decisions</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Scene 3: Year Three Section -->
-        <div id="scene-3" class="scene">
-            <h2 class="scene-title text-3xl sm:text-4xl font-bold text-gray-200 mb-8 glow-green">Year Three: The Public's Digital Architect</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                <!-- Me in the Community Section -->
-                <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-amber-400 mb-4 section-heading">Me and My Digital Community</h3>
-                    <div class="space-y-4 flex-grow">
-                        <div class="poster-card border-amber-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How can my digital actions create positive social change?</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Digital Citizenship and Social Impact</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="poster-card border-amber-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How do I collaborate in a digital world? (Dummy)</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Dummy: Online Communities and Collaboration</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Building Solutions with AI Section -->
-                <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-glow-purple mb-4 section-heading">Building Solutions for Society</h3>
-                    <div class="space-y-4 flex-grow">
-                        <div class="poster-card border-purple-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How do I use technology to solve global and societal challenges?</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Digital Transformation for Social Impact</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="poster-card border-purple-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How does technology affect public policy? (Dummy)</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Dummy: Technology and Governance</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Organising Information for the Public Good Section -->
-                <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-glow-green mb-4 section-heading">Organising Information for the Public Good</h3>
-                    <div class="space-y-4 flex-grow">
-                        <div class="poster-card border-green-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How do I use data to inform public policy and support communities?</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Data Ethics and Governance</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="poster-card border-green-400">
-                            <div class="card-face card-front">
-                                <h4 class="card-title">How do I ensure data is used ethically? (Dummy)</h4>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="back-text-container">
-                                    <p class="back-text">Dummy: Data Privacy and Security</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navigation controls at the bottom of the poster -->
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4">
+        <!-- FIX: Navigation controls are now part of the flex flow, not absolutely positioned -->
+        <div class="flex-shrink-0 pt-6 flex items-center justify-center gap-4">
             <button id="prev-btn" class="nav-button">Previous</button>
             <span id="page-indicator" class="text-white font-bold text-lg">1 / 3</span>
             <button id="next-btn" class="nav-button">Next</button>
         </div>
 
-        <!-- Custom message box -->
+        <!-- Custom message box (this can remain absolutely positioned relative to the main container) -->
         <div id="message-box" class="message-box"></div>
 
     </div>
@@ -589,13 +609,14 @@
              * Updates the UI to show the current scene and navigation state.
              */
             function updateUI() {
-                // Deactivate all scenes
+                // Deactivate all scenes by removing the 'active' class
                 scenes.forEach(scene => {
                     scene.classList.remove('active');
                 });
                 
-                // Activate the current scene
-                // Use a timeout to allow the display property to update before adding the active class for the transition
+                // Activate the current scene by adding the 'active' class
+                // The CSS handles the fade/scale transition via opacity and transform
+                // A small timeout can help ensure transitions are smooth
                 setTimeout(() => {
                     scenes[currentSceneIndex].classList.add('active');
                 }, 50);
